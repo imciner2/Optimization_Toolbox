@@ -7,7 +7,7 @@ classdef AugmentedLagrangian_QP_Hessian
     % by introducing a quadratic penalty term and also the Lagrange
     % multipler vector for the constraint. This then creates a saddle-point
     % optimization problem:
-    %         max min 1/2 x'Ax - b'x u'*(Cx - d) + rho*(Cx - d)^2
+    %         max min 1/2 x'Ax - b'x + u'*(Cx - d) + rho*(Cx - d)^2
     %          u   x
     % The Hessian of this optimization problem (which this class
     % represents) is:
