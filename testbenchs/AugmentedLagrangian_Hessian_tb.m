@@ -33,8 +33,8 @@ for (i = 1:1:numTests)
     end
     
     % Test left multiplication
-    test = vec'*Hess;
-    truth = vec'*(A+rho*(C'*C));
+    test = Hess*vec;
+    truth = (A+rho*(C'*C))*vec;
     
     if ( abs(test - truth) > tol )
         warning('Failed left multiplication test');
