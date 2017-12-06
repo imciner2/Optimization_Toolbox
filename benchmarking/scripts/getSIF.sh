@@ -7,12 +7,13 @@
 #
 # Created by: Ian McInerney
 # Created on: November 23, 2017
-# Version: 1.0
-# Last Modified: November 28, 2017
+# Version: 1.2
+# Last Modified: December 6, 2017
 #
 # Revision History:
 #   1.0 - Initial Release
 #   1.1 - Modified to become more general SIF fetching
+#   1.2 - Added error checking to wget command
 
 PROBLEM_NAME=$1   # The problem name from the 1st argument
 PROBLEM_REPO=$2   # The problem repository is the 2nd argument
@@ -37,6 +38,11 @@ if [ ! -e $PROBLEM_SIF ]; then
   # The .SIF file isn't here, get it from the web
   URL="$SET_URL/$PROBLEM_SIF"
   wget $URL
+
+  if [ "$?" -ne 0 ]; then
+    echo Error fetching problem
+    exit 1
+  fi
 else
   echo Problem already downloaded
 fi

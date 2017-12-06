@@ -36,13 +36,14 @@ function [ QP ] = cutest_getQP( varargin )
 %
 % Created by: Ian McInerney
 % Created on: November 15, 2017
-% Version: 1.2
-% Last Modified: November 28, 2017
+% Version: 1.3
+% Last Modified: December 6, 2017
 %
 % Revision History:
 %   1.0 - Initial Release
 %   1.1 - Added initial variable output
 %   1.2 - Modified output to be in a data structure, added problem name field
+% 	1.3 - Changed objective gradient function to use cutest_slagjac instead of cutest_grad
 
 
 %% Make sure the cutest problem exists on the path
@@ -62,10 +63,14 @@ Problem = cutest_setup();
 
 
 %% Get the objective function pieces
-point = zeros(Problem.n, 1);        % Create the point x=0
-QP.Q = cutest_isphess(point, 0);       % Get the hessian at x=0
+point = zeros(Problem.n, 1);
+QP.Q = cutest_isphess( point, 0);          % Get the hessian of the objective at x=0
 
-QP.c = sparse( cutest_grad(point) );   % Get the gradient at x=0
+% In an ideal world, this cutest_grad function would be all that is needed,
+% however it crashes the .mex file when run on problems that have parameters set
+% at SIF decode time
+%QP.c = sparse( cutest_grad( point, 0) );   % Get the gradient at x=0
+[QP.c, ~] = cutest_slagjac( point, 0 );   % Get the gradient of the objective at x=0
 
 
 %% Get the constraints

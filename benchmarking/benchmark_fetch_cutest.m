@@ -25,10 +25,11 @@ function [ problemDir ] = benchmark_fetch_cutest( problemName, varargin )
 % Created by: Ian McInerney
 % Created on: November 28, 2017
 % Version: 1.0
-% Last Modified: November 28, 2017
+% Last Modified: December 6, 2017
 %
 % Revision History:
 %   1.0 - Initial Release
+%   1.1 - Added error checking
 
 disp(['Fetching problem ', upper(problemName)]);
 
@@ -45,12 +46,16 @@ cd('scripts');
 if ( ~isempty(varargin) )
     params = varargin{1};
     % Give parameters to the SIF decoder
-    system(['./getSIF.sh ', problemName, ' cutest ftp://ftp.numerical.rl.ac.uk/pub/cutest/sif ', params]);
+    stat = system(['./getSIF.sh ', problemName, ' cutest ftp://ftp.numerical.rl.ac.uk/pub/cutest/sif ', params]);
 else
     % No parameters needed
-    system(['./getSIF.sh ', problemName, ' cutest ftp://ftp.numerical.rl.ac.uk/pub/cutest/sif']);
+    stat = system(['./getSIF.sh ', problemName, ' cutest ftp://ftp.numerical.rl.ac.uk/pub/cutest/sif']);
 end
 cd('../');
+
+if (stat)
+    error(['Unable to fetch problem ', problemName]);
+end
 
 %% Navigate to the active directory for the problem, get it, and save it
 cd('problems/activeCUTEst');

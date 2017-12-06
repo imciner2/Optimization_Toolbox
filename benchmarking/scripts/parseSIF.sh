@@ -44,6 +44,14 @@ if [[ ! -e $PROBLEM_PATH/$PROBLEM_TAR ]] || [[ $PARAMETERS == '1' ]]; then
   # The tar archive isn't here, create it
   echo Archive containing problem does not exist, compiling problem
 
+  # Test to see if a gcc-4.9 installation exists
+  if [[ -e /opt/gcc-4.9 ]]; then
+    echo Using gcc-4.9 located at /opt/gcc-4.9
+    export PATH=/opt/gcc-4.9:$PATH
+  else
+    echo Using system default gcc
+  fi
+
   # Navigate to the active problem directory
   cd $ACTIVE_PATH
 

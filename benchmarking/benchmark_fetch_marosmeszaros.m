@@ -26,16 +26,28 @@ function [ QP ] = benchmark_fetch_marosmeszaros( problemName )
 %
 % Outputs:
 %   QP - A structure containing the matrices and vectors that make up the
-%        QP problem.
+%        QP problem (as follows).
+%         Q    - The quadratic term matrix
+%         c    - The linear term vector
+%         Aeq  - The coefficient matrix for the linear equality constraints
+%         beq  - The constant vector for the linear equality constraints
+%         Ale  - The coefficient matrix for the linear inequality constraints
+%         ble  - The constant vector for the linear inequality constraints
+%         ub   - The upper bounds on the variables
+%         lb   - The lower bounds on the variables
+%         x0   - Initial guess for x
+%         mu0  - Initial geuss for mu
+%         name - Problem name
 %
 % Created by: Ian McInerney
 % Created on: November 24, 2017
-% Version: 1.0
-% Last Modified: November 28, 2017
+% Version: 1.2
+% Last Modified: December 6, 2017
 %
 % Revision History:
 %   1.0 - Initial Release
 %   1.1 - Modified to use generic SIF scripts
+%	1.2 - Updated the output from cutest_getQP() and added error checking
 
 disp(['Fetching problem ', upper(problemName)]);
 
@@ -59,13 +71,17 @@ end
 %% Call the script to get the problem
 disp('Problem not converted, calling conversion scripts');
 cd('scripts');
-system(['./getSIF.sh ', problemName, ' marosmeszaros ftp://ftp.numerical.rl.ac.uk/pub/cuter/marosmeszaros']);
+stat = system(['./getSIF.sh ', problemName, ' marosmeszaros ftp://ftp.numerical.rl.ac.uk/pub/cuter/marosmeszaros']);
 cd('../');
+
+if (stat)
+    error(['Unable to fetch problem ', problemName]);
+end
 
 %% Navigate to the active directory for the problem, get it, and save it
 cd('problems/activeCUTEst');
 disp('Getting QP form of the problem');
-[QP.Q, QP.c, QP.Aeq, QP.beq, QP.Ale, QP.ble, QP.ub, QP.lb, QP.x0, QP.mu0] = cutest_getQP();
+[ QP ] = cutest_getQP();
 cd(scriptDir);
 save(saveFile, 'QP');
 
