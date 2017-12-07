@@ -149,7 +149,7 @@ con_ineq = Problem.linear & ~Problem.equatn;
 
 % Pull out the equality constraints from the constraint arrays
 QP.Aeq = con_lhs( con_eq, : );
-QP.beq = con_rhs( con_eq );
+QP.beq = sparse( con_rhs( con_eq ) );
 
 % Round any near-zero values to zero
 QP.Aeq( abs(QP.Aeq) < tol ) = 0;
@@ -162,7 +162,7 @@ con_geq = con_ineq & (Problem.cu == 1e20);
 
 % Pull out the <= constraints
 Ale = con_lhs( con_leq, : );
-ble = Problem.cu( con_leq );
+ble = sparse(Problem.cu( con_leq ));
 
 % Pull out the >= constraints and convert them to <=, then append them to
 % the constraint matrix
