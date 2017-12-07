@@ -1,2 +1,6 @@
+# Ignore MATLAB bsckup files
+*.asv
+*~
+
 # Ignore the problem directory
 benchmarking/problems
