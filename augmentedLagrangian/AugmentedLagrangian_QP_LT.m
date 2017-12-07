@@ -162,6 +162,50 @@ classdef AugmentedLagrangian_QP_LT
             res.tra = 2;
         end
         
+        function res = plus(a, b)
+            %minus Perform subtraction using this vector
+            
+            if ( isa(a, 'AugmentedLagrangian_QP_LT') )
+                % Compute the vector compute if it is the coefficients
+                lv = compute(a);
+            else
+                % Otherwise just pass it through
+                lv = a;
+            end
+            
+            if ( isa(b, 'AugmentedLagrangian_QP_LT') )
+                % Compute the vector compute if it is the coefficients
+                rv = compute(b);
+            else
+                % Otherwise just pass it through
+                rv = b;
+            end
+            
+            res = lv + rv;
+        end
+        
+        function res = minus(a, b)
+            %minus Perform subtraction using this vector
+            
+            if ( isa(a, 'AugmentedLagrangian_QP_LT') )
+                % Compute the vector compute if it is the coefficients
+                lv = compute(a);
+            else
+                % Otherwise just pass it through
+                lv = a;
+            end
+            
+            if ( isa(b, 'AugmentedLagrangian_QP_LT') )
+                % Compute the vector compute if it is the coefficients
+                rv = compute(b);
+            else
+                % Otherwise just pass it through
+                rv = b;
+            end
+            
+            res = lv - rv;
+        end
+        
         function res = mtimes(a, b)
             %mtimes Compute the matrix multiplication of the Hessian
             

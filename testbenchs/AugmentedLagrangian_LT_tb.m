@@ -19,6 +19,12 @@ ctransDualTestPass = 0;
 subsPriTestPass = 0;
 subsDualTestPass = 0;
 
+subtractPriTestPass = 0;
+subtractDualTestPass = 0;
+
+addPriTestPass = 0;
+addDualTestPass = 0;
+
 for (i = 1:1:numTests)
     % Randomly generate the A and C matrices
     b = rand(numVar, 1);
@@ -79,6 +85,68 @@ for (i = 1:1:numTests)
         warning('Failed left multiplication Dual test');
     else
         leftDualTestPass = leftDualTestPass + 1;
+    end
+    
+    %% Test subtraction
+    ltVec.pri = 1;
+    priTest1 = ltVec + vec1;
+    priTest2 = vec1 + ltVec;
+    
+    ltVec.pri = 0;
+    dualTest1 = ltVec + vec2;
+    dualTest2 = vec2 + ltVec;
+    
+    priTruth1 = (b+C'*(rho.*d - u)) + vec1;
+    priTruth2 = vec1 + (b+C'*(rho.*d - u));
+    
+    dualTruth1 = (C*x - d) + vec2;
+    dualTruth2 = vec2 + (C*x - d);
+    
+    if ( abs(priTest1 - priTruth1) > tol )
+        warning('Failed left addition Primal test');
+    elseif ( abs(priTest2 - priTruth2) > tol )
+        warning('Failed right addition Primal test');
+    else
+        addPriTestPass = addPriTestPass + 1;
+    end
+    
+    if ( abs(dualTest1 - dualTruth1) > tol )
+        warning('Failed left subtraction Dual test');
+    elseif ( abs(dualTest2 - dualTruth2) > tol )
+        warning('Failed right subtraction Dual test');
+    else
+        addDualTestPass = addDualTestPass + 1;
+    end
+    
+    %% Test subtraction
+    ltVec.pri = 1;
+    priTest1 = ltVec - vec1;
+    priTest2 = vec1 - ltVec;
+    
+    ltVec.pri = 0;
+    dualTest1 = ltVec - vec2;
+    dualTest2 = vec2 - ltVec;
+    
+    priTruth1 = (b+C'*(rho.*d - u)) - vec1;
+    priTruth2 = vec1 - (b+C'*(rho.*d - u));
+    
+    dualTruth1 = (C*x - d) - vec2;
+    dualTruth2 = vec2 - (C*x - d);
+    
+    if ( abs(priTest1 - priTruth1) > tol )
+        warning('Failed left subtraction Primal test');
+    elseif ( abs(priTest2 - priTruth2) > tol )
+        warning('Failed right subtraction Primal test');
+    else
+        subtractPriTestPass = subtractPriTestPass + 1;
+    end
+    
+    if ( abs(dualTest1 - dualTruth1) > tol )
+        warning('Failed left subtraction Dual test');
+    elseif ( abs(dualTest2 - dualTruth2) > tol )
+        warning('Failed right subtraction Dual test');
+    else
+        subtractDualTestPass = subtractDualTestPass + 1;
     end
     
     %% Test conjugate transpose
@@ -158,6 +226,12 @@ disp(['Right Dual multiplication test pass ', num2str(rightDualTestPass), ' out 
 
 disp(['Left Primal multiplication test pass ', num2str(leftPriTestPass), ' out of ', num2str(numTests)]);
 disp(['Left Dual multiplication test pass ', num2str(leftDualTestPass), ' out of ', num2str(numTests)]);
+
+disp(['Primal addition test pass ', num2str(addPriTestPass), ' out of ', num2str(numTests)]);
+disp(['Dual addition test pass ', num2str(addDualTestPass), ' out of ', num2str(numTests)]);
+
+disp(['Primal subtraction test pass ', num2str(subtractPriTestPass), ' out of ', num2str(numTests)]);
+disp(['Dual subtraction test pass ', num2str(subtractDualTestPass), ' out of ', num2str(numTests)]);
 
 disp(['Conjugate Primal transpose test pass ', num2str(ctransPriTestPass), ' out of ', num2str(numTests)]);
 disp(['Conjugate Dual transpose test pass ', num2str(ctransDualTestPass), ' out of ', num2str(numTests)]);
