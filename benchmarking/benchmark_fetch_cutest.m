@@ -10,12 +10,15 @@ function [ problemDir ] = benchmark_fetch_cutest( problemName, varargin )
 % Usage:
 %   [ problemDir ] = benchmark_fetch_marosmeszaros( problemName )
 %   [ problemDir ] = benchmark_fetch_marosmeszaros( problemName, SIFParams )
+%   [ problemDir ] = benchmark_fetch_marosmeszaros( problemName, SIFParams, forceRebuild )
 %
 % Inputs:
-%   problemName - The name of the problem in the CUTEst benchmark set to
-%                 download.
-%   SIFParams   - Parameters that should be passed to the SIF decoder to
-%                 create the problem (a character string)
+%   problemName  - The name of the problem in the CUTEst benchmark set to
+%                  download.
+%   SIFParams    - Parameters that should be passed to the SIF decoder to
+%                  create the problem (a character string) (if not needed,
+%                  use [])
+%   forceRebuild - Force the problem to be rebuilt (defaults to false, e.g. 0)
 %
 % Outputs:
 %   problemDir - The file directory (full path) where the mcutest.mex file
@@ -25,13 +28,15 @@ function [ problemDir ] = benchmark_fetch_cutest( problemName, varargin )
 % Created by: Ian McInerney
 % Created on: November 28, 2017
 % Version: 1.0
-% Last Modified: December 6, 2017
+% Last Modified: December 7, 2017
 %
 % Revision History:
 %   1.0 - Initial Release
 %   1.1 - Added error checking
+%   1.2 - Added ability to force rebuild of problem
 
 disp(['Fetching problem ', upper(problemName)]);
+
 
 %% Find the directory where the problems will be located, and navigate to it
 scriptDir = which('benchmark_fetch_cutest');
@@ -39,29 +44,55 @@ scriptDir = strrep(scriptDir, 'benchmark_fetch_cutest.m', '');
 originalDir = cd(scriptDir);
 
 
-%% Call the script to get the problem and build it
-disp('Calling problem fetcher');
+%% Parse the arguments to the function
 cd('scripts');
 
-if ( ~isempty(varargin) )
-    params = varargin{1};
+switch ( length(varargin) )
+
+    case 0
+        % Default case (no arguments)
+        params = [];
+        force = 0;
+    case 1
+        % The SIF decode parameters were specified
+        params = varargin{1};
+        force = 0;
+    case 2
+        % SIF decode parameters and force were specified
+        params = varargin{1};
+        force = varargin{2};
+    otherwise
+        % Default case (no arguments)
+        params = [];
+        force = 0;
+end
+
+if (force == 1)
+    disp('Forcing rebuild of problem');
+end
+
+%% Call the scripts to get the problem
+if ( ~isempty(params) )
     % Give parameters to the SIF decoder
-    stat = system(['./getSIF.sh ', problemName, ' cutest ftp://ftp.numerical.rl.ac.uk/pub/cutest/sif ', params]);
+    stat = system(['./getSIF.sh ', problemName, ' cutest ftp://ftp.numerical.rl.ac.uk/pub/cutest/sif ', num2str(force), ' ', params]);
 else
     % No parameters needed
-    stat = system(['./getSIF.sh ', problemName, ' cutest ftp://ftp.numerical.rl.ac.uk/pub/cutest/sif']);
+    stat = system(['./getSIF.sh ', problemName, ' cutest ftp://ftp.numerical.rl.ac.uk/pub/cutest/sif ', num2str(force)]);
 end
 cd('../');
 
+
+%% Check the error status and see if there was a problem
 if (stat)
     error(['Unable to fetch problem ', problemName]);
 end
 
-%% Navigate to the active directory for the problem, get it, and save it
+
+%% Navigate to the active directory for the problem
 cd('problems/activeCUTEst');
 
 
-%% Go back to the original directory and save the problem dir
+%% Go back to the original directory and save the problem dir as the output
 problemDir = cd(originalDir);
 
 end
