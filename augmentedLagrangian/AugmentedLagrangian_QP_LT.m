@@ -9,8 +9,8 @@ classdef AugmentedLagrangian_QP_LT
     % optimization problem:
     %         max min 1/2 x'Ax - b'x + u'*(Cx - d) + rho*(Cx - d)^2
     %          u   x
-    % The linear coefficient vector can take on two forms (depending on it
-    % it looked at as coefficients for the primal or the dual variables):
+    % The linear coefficient vector can take on two forms (depending on if
+    % it is looked at as coefficients for the primal or the dual variables):
     %       Primal:
     %         b + C'*(rho*d - u)
     %       Dual:
