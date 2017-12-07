@@ -107,6 +107,9 @@ while ~STOP
     p_n = -r_n + beta*p;
    
     % Save the new variables for the next loop
+    if ( any( isnan(x_n) ) )
+        error('cg_qp: NaN encountered in the variables, stopping');
+    end
     x = x_n;
     r = r_n;
     p = p_n;
