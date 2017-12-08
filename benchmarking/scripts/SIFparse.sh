@@ -82,6 +82,11 @@ if [[ ! -e $PROBLEM_PATH/$PROBLEM_TAR ]] || [[ -n "$SIF_PARAM" ]] || [[ $FORCE =
     $CUTEST_EXEC "$PROBLEM_SIF"
   fi
 
+  if [ ! -e 'ELFUN.f' ]; then
+    printf 'Error building MATLAB file for %s\n' $PROBLEM_NAME
+    exit 1
+  fi
+
   # Create a tar.gz archive of the relevant files
   rm -f $PROBLEM_SIF
   tar -c * -f $PROBLEM_TAR

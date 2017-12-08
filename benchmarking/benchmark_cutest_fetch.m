@@ -82,10 +82,14 @@ end
 %% Call the parser script
 if ( ~isempty(params) )
     % Give parameters to the SIF decoder
-    system([scriptDir, 'SIFparse.sh ', problemName, ' cutest ', num2str(force), ' ', params]);
+    stat = system([scriptDir, 'SIFparse.sh ', problemName, ' cutest ', num2str(force), ' ', params]);
 else
     % No parameters needed
-    system([scriptDir, 'SIFparse.sh ', problemName, ' cutest ', num2str(force)]);
+    stat = system([scriptDir, 'SIFparse.sh ', problemName, ' cutest ', num2str(force)]);
+end
+
+if (stat)
+    error(['Unable to build problem ', problemName]);
 end
 
 
