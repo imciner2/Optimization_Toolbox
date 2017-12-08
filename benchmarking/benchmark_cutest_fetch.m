@@ -43,8 +43,8 @@ disp(['Fetching problem ', upper(problemName)]);
 mDir = which('benchmark_cutest_fetch');
 mDir = strrep(mDir, 'benchmark_cutest_fetch.m', '');
 
-scriptDir = [mDir, 'scripts', filesep];         % Location of the scripts
-problemDir = [mDir, 'problems/activeCUTEst'];   % Location of the active problem
+scriptDir = [mDir, 'scripts', filesep];     % Location of the scripts
+problemDir = ['/tmp/cutest'];               % Location of the active problem
 
 
 %% Parse the arguments to the function
@@ -82,10 +82,10 @@ end
 %% Call the parser script
 if ( ~isempty(params) )
     % Give parameters to the SIF decoder
-    stat = system([scriptDir, 'SIFparse.sh ', problemName, ' cutest ', num2str(force), ' ', params]);
+    stat = system([scriptDir, 'SIFparse.sh ', problemName, ' cutest ', problemDir, ' ', num2str(force), ' ', params]);
 else
     % No parameters needed
-    stat = system([scriptDir, 'SIFparse.sh ', problemName, ' cutest ', num2str(force)]);
+    stat = system([scriptDir, 'SIFparse.sh ', problemName, ' cutest ', problemDir, ' ', num2str(force)]);
 end
 
 if (stat)

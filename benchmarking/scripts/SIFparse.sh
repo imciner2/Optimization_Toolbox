@@ -20,11 +20,12 @@
 #   1.3 - Refactored scripts
 
 # Display help if no arguments are given
-if [[ $# -ne 4 ]] && [[ $# -ne 3 ]]; then
-  echo 'Usage: ' $0 'problemName problemSet forceDownload [SIFparam]'
+if [[ $# -ne 5 ]] && [[ $# -ne 4 ]]; then
+  echo 'Usage: ' $0 'problemName problemSet usagePath forceDownload [SIFparam]'
   echo ''
   echo 'problemName: The given name of the problem in the set (also the filename without .SIF)'
   echo 'problemSet: The short name for the problem set (e.g. cutest, marosmeszaros)'
+  echo 'usagePath: The directory where the problem will be used'
   echo 'forceDownload: if 1, it forces the recompilation of the problem, overwritting the current archive'
   echo 'SIFparam: (optional) Contains the parameters to pass to the sifdecoder to use in the SIF file'
   exit 1
@@ -40,13 +41,13 @@ fi
 # Get the command line arguments
 PROBLEM_NAME=$1   # Get the problem name (which is the base of the filename)
 PROBLEM_REPO=$2   # Get the problem repository
-FORCE=$3          # If the rebuild should be forced or not
-SIF_PARAM=$4      # Any parameters to pass to the sif decoder
+USAGE_PATH=$3     # The path where the problem will be used
+FORCE=$4          # If the rebuild should be forced or not
+SIF_PARAM=$5      # Any parameters to pass to the sif decoder
 
 
 PROBLEM_PATH="$OPTIM_BENCH/$PROBLEM_REPO"   # Where the problem repositories are located
-TEMP_PATH="/tmp/siftemp"                    # The path where the SIF should be parsed
-mkdir -p $TEMP_PATH
+mkdir -p $USAGE_PATH
 
 # Change the filename to be all uppercase with the .SIF extension
 PROBLEM_BASE=$(echo $PROBLEM_NAME | awk '{print toupper($0)}')
@@ -68,7 +69,7 @@ if [[ ! -e $PROBLEM_PATH/$PROBLEM_TAR ]] || [[ -n "$SIF_PARAM" ]] || [[ $FORCE =
   printf 'Compiling problem %s...\n' $PROBLEM_BASE
 
   # Navigate to the active problem directory
-  cd $TEMP_PATH
+  cd $USAGE_PATH
 
   # Copy the SIF file
   cp $PROBLEM_PATH/$PROBLEM_SIF ./
@@ -97,6 +98,3 @@ if [[ ! -e $PROBLEM_PATH/$PROBLEM_TAR ]] || [[ -n "$SIF_PARAM" ]] || [[ $FORCE =
 else
   printf 'Problem already compiled\n'
 fi
-
-cd /tmp
-rm -rf $TEMP_PATH

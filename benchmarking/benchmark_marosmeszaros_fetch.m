@@ -72,9 +72,9 @@ end
 mDir = which('benchmark_marosmeszaros_fetch');
 mDir = strrep(mDir, 'benchmark_marosmeszaros_fetch.m', '');
 
-scriptDir = [mDir, 'scripts', filesep];         % Location of the scripts
-problemDir = [mDir, 'problems/activeCUTEst'];   % Location of the active problem
-repoDirec = getenv('OPTIM_BENCH');              % Find the repository location
+scriptDir = [mDir, 'scripts', filesep];     % Location of the scripts
+problemDir = ['/tmp/cutest'];               % Location of the active problem
+repoDirec = getenv('OPTIM_BENCH');          % Find the repository location
 
 
 %% Check to see if the extracted problem exists as a .mat file already
