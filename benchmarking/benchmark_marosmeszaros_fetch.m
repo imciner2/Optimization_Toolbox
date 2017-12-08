@@ -43,14 +43,15 @@ function [ QP ] = benchmark_marosmeszaros_fetch( problemName, varargin )
 %
 % Created by: Ian McInerney
 % Created on: November 24, 2017
-% Version: 1.2
-% Last Modified: December 7, 2017
+% Version: 1.4
+% Last Modified: December 8, 2017
 %
 % Revision History:
 %   1.0 - Initial Release
 %   1.1 - Modified to use generic SIF scripts
 %	1.2 - Updated the output from cutest_getQP() and added error checking
 %   1.3 - Added ability to force the rebuild of the QP problem
+%   1.4 - Refactored scripts
 
 disp(['Fetching problem ', upper(problemName)]);
 
@@ -67,44 +68,50 @@ if (force == 1)
 end
 
 
-%% Find the directory where the problems will be located, and navigate to it
-scriptDir = which('benchmark_marosmeszaros_fetch');
-scriptDir = strrep(scriptDir, 'benchmark_marosmeszaros_fetch.m', '');
-originalDir = cd(scriptDir);
+%% Find the directory where the scripts and active problem are located
+mDir = which('benchmark_marosmeszaros_fetch');
+mDir = strrep(mDir, 'benchmark_marosmeszaros_fetch.m', '');
+
+scriptDir = [mDir, 'scripts', filesep];         % Location of the scripts
+problemDir = [mDir, 'problems/activeCUTEst'];   % Location of the active problem
+repoDirec = getenv('OPTIM_BENCH');              % Find the repository location
 
 
-%% Check to see if the problem exists as a .mat file already
-saveFile=['problems/marosmeszaros/', upper(problemName), '.mat'];
+%% Check to see if the extracted problem exists as a .mat file already
+saveFile=[repoDirec, '/marosmeszaros/', upper(problemName), '.mat'];
 if ( (exist(saveFile, 'file') ~= 0) && (~force) )
     % The file exists, load it then leave
     disp('Problem already downloaded and converted, loading .mat file');
     load(saveFile);
-    cd(originalDir);
     return;
 end
 
 
-%% Call the script to get the problem
-disp('Calling conversion scripts');
-cd('scripts');
-stat = system(['./SIFget.sh ', problemName, ' marosmeszaros ftp://ftp.numerical.rl.ac.uk/pub/cuter/marosmeszaros ', num2str(force)]);
-cd('../');
+%% Call the problem download script
+stat = system([scriptDir, 'SIFdownload.sh ', problemName, ' marosmeszaros ftp://ftp.numerical.rl.ac.uk/pub/cuter/marosmeszaros ', num2str(force)]);
 
-
-%% Check the error status and see if there was a problem
 if (stat)
     error(['Unable to fetch problem ', problemName]);
 end
 
+
+%% Call the parser script
+system([scriptDir, 'SIFparse.sh ', problemName, ' marosmeszaros ', num2str(force)]);
+
+
+%% Extract the problem to the working directory
+stat = system( [scriptDir, 'SIFextract.sh ', problemName, ' marosmeszaros ', problemDir]);
+
+if (stat)
+    error(['Unable to extract problem ', problemName]);
+end
+
+
 %% Navigate to the active directory for the problem, get it, and save it
-cd('problems/activeCUTEst');
+originalDir = cd(problemDir);
 disp('Getting QP form of the problem');
-[ QP ] = cutest_getQP();
-cd(scriptDir);
-save(saveFile, 'QP');
-
-
-%% Go back to the original directory
+[ QP ] = cutest_getQP();    % Extract the QP
+save(saveFile, 'QP');       % Save the problem 
 cd(originalDir);
 
 end

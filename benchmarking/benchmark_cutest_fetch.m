@@ -27,28 +27,28 @@ function [ problemDir ] = benchmark_cutest_fetch( problemName, varargin )
 %
 % Created by: Ian McInerney
 % Created on: November 28, 2017
-% Version: 1.0
-% Last Modified: December 7, 2017
+% Version: 1.3
+% Last Modified: December 8, 2017
 %
 % Revision History:
 %   1.0 - Initial Release
 %   1.1 - Added error checking
 %   1.2 - Added ability to force rebuild of problem
+%   1.3 - Refactored scripts
 
 disp(['Fetching problem ', upper(problemName)]);
 
 
-%% Find the directory where the problems will be located, and navigate to it
-scriptDir = which('benchmark_cutest_fetch');
-scriptDir = strrep(scriptDir, 'benchmark_cutest_fetch.m', '');
-originalDir = cd(scriptDir);
+%% Find the directory where the scripts and active problem are located
+mDir = which('benchmark_cutest_fetch');
+mDir = strrep(mDir, 'benchmark_cutest_fetch.m', '');
+
+scriptDir = [mDir, 'scripts', filesep];         % Location of the scripts
+problemDir = [mDir, 'problems/activeCUTEst'];   % Location of the active problem
 
 
 %% Parse the arguments to the function
-cd('scripts');
-
 switch ( length(varargin) )
-
     case 0
         % Default case (no arguments)
         params = [];
@@ -71,28 +71,29 @@ if (force == 1)
     disp('Forcing rebuild of problem');
 end
 
-%% Call the scripts to get the problem
-if ( ~isempty(params) )
-    % Give parameters to the SIF decoder
-    stat = system(['./SIFget.sh ', problemName, ' cutest ftp://ftp.numerical.rl.ac.uk/pub/cutest/sif ', num2str(force), ' ', params]);
-else
-    % No parameters needed
-    stat = system(['./SIFget.sh ', problemName, ' cutest ftp://ftp.numerical.rl.ac.uk/pub/cutest/sif ', num2str(force)]);
-end
-cd('../');
+%% Call the problem download script
+stat = system([scriptDir, 'SIFdownload.sh ', problemName, ' cutest ftp://ftp.numerical.rl.ac.uk/pub/cutest/sif ', num2str(force)]);
 
-
-%% Check the error status and see if there was a problem
 if (stat)
     error(['Unable to fetch problem ', problemName]);
 end
 
 
-%% Navigate to the active directory for the problem
-cd('problems/activeCUTEst');
+%% Call the parser script
+if ( ~isempty(params) )
+    % Give parameters to the SIF decoder
+    system([scriptDir, 'SIFparse.sh ', problemName, ' cutest ', num2str(force), ' ', params]);
+else
+    % No parameters needed
+    system([scriptDir, 'SIFparse.sh ', problemName, ' cutest ', num2str(force)]);
+end
 
 
-%% Go back to the original directory and save the problem dir as the output
-problemDir = cd(originalDir);
+%% Extract the problem to the working directory
+stat = system( [scriptDir, 'SIFextract.sh ', problemName, ' cutest ', problemDir]);
+
+if (stat)
+    error(['Unable to extract problem ', problemName]);
+end
 
 end
