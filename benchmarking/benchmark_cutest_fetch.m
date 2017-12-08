@@ -8,9 +8,9 @@ function [ problemDir ] = benchmark_cutest_fetch( problemName, varargin )
 %
 %
 % Usage:
-%   [ problemDir ] = benchmark_fetch_marosmeszaros( problemName )
-%   [ problemDir ] = benchmark_fetch_marosmeszaros( problemName, SIFParams )
-%   [ problemDir ] = benchmark_fetch_marosmeszaros( problemName, SIFParams, forceRebuild )
+%   [ problemDir ] = benchmark_cutest_fetch( problemName )
+%   [ problemDir ] = benchmark_cutest_fetch( problemName, SIFParams )
+%   [ problemDir ] = benchmark_cutest_fetch( problemName, SIFParams, forceRebuild )
 %
 % Inputs:
 %   problemName  - The name of the problem in the CUTEst benchmark set to

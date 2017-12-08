@@ -18,8 +18,8 @@ function [ QP ] = benchmark_marosmeszaros_fetch( problemName, varargin )
 %
 %
 % Usage:
-%   [ QP ] = benchmark_fetch_marosmeszaros( problemName )
-%   [ QP ] = benchmark_fetch_marosmeszaros( problemName, forceRebuild )
+%   [ QP ] = benchmark_marosmeszaros_fetch( problemName )
+%   [ QP ] = benchmark_marosmeszaros_fetch( problemName, forceRebuild )
 %
 % Inputs:
 %   problemName  - The name of the problem in the Maros & Meszaros QP
