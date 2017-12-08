@@ -55,7 +55,7 @@ fi
 cd $CURR_DIR
 
 # Parse the SIF file into the mcutest format
-./parseSIF.sh "$PROBLEM_PATH" "$PROBLEM_BASE" "$ACTIVE_PATH" "$FORCE" "$SIF_PARAM"
+./SIFparse.sh "$PROBLEM_PATH" "$PROBLEM_BASE" "$ACTIVE_PATH" "$FORCE" "$SIF_PARAM"
 
 # Paths and files
 PROBLEM_TAR="$PROBLEM_BASE.tar.gz"

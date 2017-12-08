@@ -1,5 +1,5 @@
-function [ problemDir ] = benchmark_fetch_cutest( problemName, varargin )
-%BENCHMARK_FETCH_CUTEST Fetch a problem from the CUTEst benchmark set
+function [ problemDir ] = benchmark_cutest_fetch( problemName, varargin )
+%BENCHMARK_CUTEST_FETCH Fetch a problem from the CUTEst benchmark set
 %
 % This function will fetch a problem from the CUTEst benchmark
 % set (ftp://ftp.numerical.rl.ac.uk/pub/cutest/sif/mastsif.html), then
@@ -39,8 +39,8 @@ disp(['Fetching problem ', upper(problemName)]);
 
 
 %% Find the directory where the problems will be located, and navigate to it
-scriptDir = which('benchmark_fetch_cutest');
-scriptDir = strrep(scriptDir, 'benchmark_fetch_cutest.m', '');
+scriptDir = which('benchmark_cutest_fetch');
+scriptDir = strrep(scriptDir, 'benchmark_cutest_fetch.m', '');
 originalDir = cd(scriptDir);
 
 
@@ -74,10 +74,10 @@ end
 %% Call the scripts to get the problem
 if ( ~isempty(params) )
     % Give parameters to the SIF decoder
-    stat = system(['./getSIF.sh ', problemName, ' cutest ftp://ftp.numerical.rl.ac.uk/pub/cutest/sif ', num2str(force), ' ', params]);
+    stat = system(['./SIFget.sh ', problemName, ' cutest ftp://ftp.numerical.rl.ac.uk/pub/cutest/sif ', num2str(force), ' ', params]);
 else
     % No parameters needed
-    stat = system(['./getSIF.sh ', problemName, ' cutest ftp://ftp.numerical.rl.ac.uk/pub/cutest/sif ', num2str(force)]);
+    stat = system(['./SIFget.sh ', problemName, ' cutest ftp://ftp.numerical.rl.ac.uk/pub/cutest/sif ', num2str(force)]);
 end
 cd('../');
 

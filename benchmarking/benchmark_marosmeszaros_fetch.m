@@ -1,5 +1,5 @@
-function [ QP ] = benchmark_fetch_marosmeszaros( problemName, varargin )
-%BENCHMARK_FETCH_MAROSMESZAROS Fetch a problem from the Maros & Meszaros QP benchmark set
+function [ QP ] = benchmark_marosmeszaros_fetch( problemName, varargin )
+%BENCHMARK_MAROSMESZAROS_FETCH Fetch a problem from the Maros & Meszaros QP benchmark set
 %
 % This function will fetch a problem from the Maros & Meszaros benchmark
 % set (http://www.cuter.rl.ac.uk/Problems/marmes.shtml), then convert it
@@ -68,8 +68,8 @@ end
 
 
 %% Find the directory where the problems will be located, and navigate to it
-scriptDir = which('benchmark_fetch_marosmeszaros');
-scriptDir = strrep(scriptDir, 'benchmark_fetch_marosmeszaros.m', '');
+scriptDir = which('benchmark_marosmeszaros_fetch');
+scriptDir = strrep(scriptDir, 'benchmark_marosmeszaros_fetch.m', '');
 originalDir = cd(scriptDir);
 
 
@@ -87,7 +87,7 @@ end
 %% Call the script to get the problem
 disp('Calling conversion scripts');
 cd('scripts');
-stat = system(['./getSIF.sh ', problemName, ' marosmeszaros ftp://ftp.numerical.rl.ac.uk/pub/cuter/marosmeszaros ', num2str(force)]);
+stat = system(['./SIFget.sh ', problemName, ' marosmeszaros ftp://ftp.numerical.rl.ac.uk/pub/cuter/marosmeszaros ', num2str(force)]);
 cd('../');
 
 
