@@ -52,6 +52,9 @@ else
   # and ends with a line that says
   # *     classification
   START_INDEX=$(grep -in 'problem :' $PROBLEM_SIF | cut -f1 -d :)
+  if [[ -z $START_INDEX ]]; then
+    START_INDEX=$(grep -in 'problem:' $PROBLEM_SIF | cut -f1 -d :)
+  fi
   END_INDEX=$(grep -in 'classification' $PROBLEM_SIF | cut -f1 -d :)
 
   # Print out the opening comment
