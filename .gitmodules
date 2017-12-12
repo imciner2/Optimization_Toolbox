@@ -1,0 +1,3 @@
+[submodule "benchmarking/problems/mpcBenchmarking"]
+	path = benchmarking/problems/mpcBenchmarking
+	url = https://github.com/ferreau/mpcBenchmarking.git

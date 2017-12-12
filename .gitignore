@@ -3,4 +3,6 @@
 *~
 
 # Ignore the problem directory
-benchmarking/problems
+benchmarking/problems/cutest
+benchmarking/problems/marosmeszaros
+
