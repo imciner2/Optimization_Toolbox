@@ -48,7 +48,7 @@ function [ x_final, res, k, x_it, p_it, r_it ] = cg_qp(A, b, x0, varargin)
 %   'SaveIterates' - Specify whether to save the intermediate values (useful
 %                    for computing the error graph). 1 saves the iterates.
 %
-% See also CG_QP_EXACT
+% See also CG_QP_EXACT, CG_QP_FP
 %
 % Created by: Ian McInerney
 % Created on: November 3, 2017
