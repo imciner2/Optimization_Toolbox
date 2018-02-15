@@ -32,9 +32,8 @@ function [ err ] = cg_qp_err_exact( lam )
 %         algorithm
 
 
-%% Make sure eig is a column vector and remove repeated values
+%% Make sure eig is a column vector
 lam = reshape(lam, [], 1);
-lam = unique(lam);
 numEig = length(lam);
 
 
